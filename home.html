@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+      form {
+        margin: 20px auto;
+        max-width: 300px;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      #movieDetails {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to Movie Search</h1>
+    <form id="movie-form">
+      <input
+        type="text"
+        id="movieName"
+        name="movieName"
+        placeholder="Enter movie name"
+        required
+      />
+      <button type="submit">Search</button>
+    </form>
+    <div id="movieDetails"></div>
+
+    <script>
+      document
+        .getElementById("movie-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const movieName = document.getElementById("movieName").value;
+          const response = await fetch("/search-movie", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ movieName }),
+          });
+          const movieDetails = await response.json();
+          document.getElementById("movieDetails").innerHTML = `
+        <h2>${movieDetails.Title}</h2>
+        <p><strong>Year:</strong> ${movieDetails.Year}</p>
+        <p><strong>Genre:</strong> ${movieDetails.Genre}</p>
+        <p><strong>Plot:</strong> ${movieDetails.Plot}</p>
+        <img src="${movieDetails.Poster}" alt="Movie Poster">
+      `;
+        });
+    </script>
+  </body>
+</html>
